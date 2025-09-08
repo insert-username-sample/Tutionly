@@ -1,5 +1,0 @@
-name = "tuitionly-modern"
-compatibility_date = "2024-07-25"
-
-[pages]
-build_output_dir = ".next"
