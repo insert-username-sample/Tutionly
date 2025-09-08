@@ -34,12 +34,12 @@ class VapiSDK {
     // Create a mock VAPI object for development/fallback
     this.vapi = {
       on: () => {},
-      start: () => Promise.resolve({} as any),
+      start: () => Promise.resolve({}),
       stop: () => {},
       send: () => {},
       isMuted: () => false,
       setMuted: () => {}
-    } as any as Vapi;
+    } as unknown as Vapi;
     this.callbacks = {};
   }
 
@@ -135,8 +135,8 @@ class VapiSDK {
     this.vapi.stop();
   }
 
-  send(message: Record<string, unknown>) {
-    this.vapi.send(message as any);
+  send(message: any) {
+    this.vapi.send(message);
   }
 
   isMuted() {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Volume2, VolumeX, MessageSquare, BookOpen, Calculator, PenTool, Upload, FileText, Mic, MicOff, PhoneOff, Users, Moon, Sun, Download, FileDown, NotebookPen, Camera } from 'lucide-react';
 import Link from 'next/link';
@@ -15,6 +15,119 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/lib/firebase';
 import SignIn from '@/components/auth/SignIn';
 import SignUp from '@/components/auth/SignUp';
+
+const generateSessionNotes = (
+  selectedSubject: string,
+  selectedTopic: string,
+  messages: Array<{id: string, sender: 'user' | 'ai', content: string, timestamp: string}>
+) => {
+  const tutor = getTutorBySubject(selectedSubject);
+  const sessionDate = new Date().toLocaleDateString();
+  const sessionTime = new Date().toLocaleTimeString();
+  const sessionDuration = Math.floor(Math.random() * 30) + 10; // Mock session duration
+
+  let notes = `# ${tutor.name} - Comprehensive Session Report\n`;
+  notes += `**Date:** ${sessionDate}\n`;
+  notes += `**Time:** ${sessionTime}\n`;
+  notes += `**Duration:** ${sessionDuration} minutes\n`;
+  notes += `**Subject:** ${tutor.subject.charAt(0).toUpperCase() + tutor.subject.slice(1)}\n`;
+  notes += `**Topic:** ${selectedTopic || tutor.defaultTopic}\n`;
+  notes += `**Tutor:** ${tutor.name} (${tutor.subject} Specialist)\n\n`;
+
+  notes += `## 📊 Session Overview\n`;
+  notes += `This interactive tutoring session with ${tutor.name} focused on ${selectedTopic || tutor.defaultTopic}.\n`;
+  notes += `The session combined text-based learning activities, problem-solving exercises,\n`;
+  notes += `and personalized AI tutoring to enhance understanding of ${tutor.subject} concepts.\n\n`;
+
+  notes += `## 🎯 Learning Objectives\n`;
+  notes += `- Understand and apply concepts from ${selectedTopic || tutor.defaultTopic}\n`;
+  notes += `- Practice problem-solving techniques using AI-guided assistance\n`;
+  notes += `- Receive personalized feedback on learning approaches\n`;
+  notes += `- Build confidence through interactive learning experiences\n\n`;
+
+  if (messages.length > 0) {
+    notes += `## 💬 Discussion Summary\n`;
+    const userMessages = messages.filter(m => m.sender === 'user');
+    const aiMessages = messages.filter(m => m.sender === 'ai');
+
+    notes += `**Questions Asked:** ${userMessages.length}\n`;
+    notes += `**AI Responses:** ${aiMessages.length}\n\n`;
+
+    notes += `### Key Discussion Points:\n`;
+    messages.slice(-5).forEach((message, index) => {
+      if (message.sender === 'user') {
+        notes += `**Student Question (Q${index + 1}):** ${message.content}\n`;
+      } else {
+        notes += `**${tutor.name} Response:** ${message.content.slice(0, 100)}...\n`;
+      }
+    });
+    notes += `\n`;
+
+    notes += `### Communication Analysis:\n`;
+    notes += `- Short, concise questions show focused learning approach\n`;
+    notes += `- AI responses provided clear, structured explanations\n`;
+    notes += `- Interactive back-and-forth conversation maintained engagement\n`;
+    notes += `- Topic remained focused on ${selectedTopic || tutor.defaultTopic}\n\n`;
+  }
+
+  notes += `## 📚 Key Concepts Covered\n`;
+  notes += `- Theoretical foundation of ${selectedTopic || tutor.defaultTopic}\n`;
+  notes += `- Practical application and examples\n`;
+  notes += `- Common problem-solving approaches\n`;
+  notes += `- Verification and understanding checks\n\n`;
+
+  notes += `## 📈 Learning Progress\n`;
+  notes += `### Strengths Demonstrated:\n`;
+  notes += `- Consistent engagement with learning material\n`;
+  notes += `- Courage to ask questions when concepts are unclear\n`;
+  notes += `- Willingness to explore different solution approaches\n`;
+  notes += `- Good understanding of foundational concepts\n\n`;
+
+  notes += `### Areas for Development:\n`;
+  notes += `- ${tutor.subject === 'math' ? 'Mathematical: More practice with numerical calculations' : 'Conceptual: Deeper exploration of theoretical applications'}\n`;
+  notes += `- Problem-solving efficiency can be improved\n`;
+  notes += `- Practice with ${tutor.subject === 'math' ? 'algebraic manipulation' : 'conceptual connections'}\n\n`;
+
+  notes += `## 🎓 Recommended Next Steps\n`;
+  notes += `### Immediate Actions (This Week):\n`;
+  notes += `1. Review all concepts discussed in today's session\n`;
+  notes += `2. Complete 5-10 practice problems on ${selectedTopic || tutor.defaultTopic}\n`;
+  notes += `3. Identify 2-3 specific questions for the next session\n`;
+  notes += `4. Review practice problem solutions independently\n\n`;
+
+  notes += `### Medium-Term Goals (Next 2 Weeks):\n`;
+  notes += `1. Master all problem types covered in ${tutor.subject}\n`;
+  notes += `2. Develop personal problem-solving strategies\n`;
+  notes += `3. Build confidence in explaining solutions\n`;
+  notes += `4. Apply concepts to real-world scenarios\n\n`;
+
+  notes += `### Study Techniques Recommendations:\n`;
+  notes += `- Use spaced repetition for better retention\n`;
+  notes += `- Create visual mind maps of ${tutor.subject} connections\n`;
+  notes += `- Practice explaining concepts to others (rubber duck debugging)\n`;
+  notes += `- Maintain consistent daily learning schedule\n\n`;
+
+  notes += `## 📊 Session Metrics\n`;
+  notes += `- Total Messages: ${messages.length}\n`;
+  notes += `- Questions Answered: ${messages.filter(m => m.sender === 'ai').length}\n`;
+  notes += `- Learning Pace: ${sessionDuration > 20 ? 'Focused and thorough' : 'Effective and efficient'}\n`;
+  notes += `- Topic Coverage: 95% of planned objectives addressed\n\n`;
+
+  notes += `## ✍️ Personal Reflection\n`;
+  notes += `This session provided valuable learning opportunities and demonstrated\n`;
+  notes += `strong engagement with ${tutor.subject} material. The student shows curiosity\n`;
+  notes += `and willingness to explore difficult concepts. Continued practice with\n`;
+  notes += `the recommended exercises will build upon today's foundation.\n\n`;
+
+  notes += `---\n`;
+  notes += `*📝 Session Notes Generated by Tuitionly AI Learning Platform*\n`;
+  notes += `*🎯 Focused on: ${selectedTopic || tutor.defaultTopic}*\n`;
+  notes += `*👨‍🏫 Tutor: ${tutor.name}*\n`;
+  notes += `*⏱️  Generated: ${new Date().toLocaleString()}*\n`;
+  notes += `*AI-Powered Learning personalization activated*\n`;
+
+  return notes;
+};
 
 const DemoPage: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
@@ -79,7 +192,7 @@ const DemoPage: React.FC = () => {
   // Audio functions for satisfying join sounds
   const playJoinSound = () => {
     try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const audioContext = new (window.AudioContext || ((window as unknown) as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
 
@@ -99,35 +212,6 @@ const DemoPage: React.FC = () => {
       oscillator.stop(audioContext.currentTime + 0.3);
     } catch (error) {
       console.warn('Could not play join sound:', error);
-    }
-  };
-
-  const playAISound = () => {
-    try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator1 = audioContext.createOscillator();
-      const oscillator2 = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-
-      oscillator1.connect(gainNode);
-      oscillator2.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      // Create a harmonic AI presence sound
-      oscillator1.frequency.setValueAtTime(220, audioContext.currentTime); // A3 note
-      oscillator2.frequency.setValueAtTime(330, audioContext.currentTime); // E note (perfect 5th)
-
-      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.1);
-      gainNode.gain.setValueAtTime(0.15, audioContext.currentTime + 0.2);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.0);
-
-      oscillator1.start(audioContext.currentTime);
-      oscillator2.start(audioContext.currentTime);
-      oscillator1.stop(audioContext.currentTime + 1.0);
-      oscillator2.stop(audioContext.currentTime + 1.0);
-    } catch (error) {
-      console.warn('Could not play AI sound:', error);
     }
   };
 
@@ -308,20 +392,22 @@ const DemoPage: React.FC = () => {
       }
     };
 
-    const handleMessage = (message: any) => {
+    const handleMessage = (message: Record<string, unknown>) => {
       console.log('VAPI Message:', message);
       if (message.type === 'conversation-update') {
-        const lastMessage = message.conversation[message.conversation.length - 1];
+        const conversation = message.conversation as Array<{ role: string; message?: string; content?: string }>;
+        const lastMessage = conversation[conversation.length - 1];
         if (lastMessage && lastMessage.role === 'assistant') {
+          const content = lastMessage.message || lastMessage.content || '';
           setMessages(prev => [...prev, {
             id: Date.now().toString(),
             sender: 'ai',
-            content: lastMessage.message || lastMessage.content,
+            content: content,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           }]);
 
           setIsAISpeaking(true);
-          const duration = (lastMessage.message || lastMessage.content || '').length * 50;
+          const duration = content.length * 50;
           const animateAI = () => {
             const levels = Array.from({ length: 5 }, () => Math.random() * 40 + 15);
             setAiAudioLevels(levels);
@@ -360,17 +446,18 @@ const DemoPage: React.FC = () => {
     };
   }, []);
 
-  const handleDisconnect = () => {
+  const handleDisconnect = useCallback(() => {
     vapi.stop();
     setIsConnected(false);
     setIsMicOn(false);
     
     // Generate session notes
-    generateSessionNotes();
+    const notes = generateSessionNotes(selectedSubject, selectedTopic, messages);
+    setSessionNotes(notes);
     setShowNotes(true);
-  };
+  }, [selectedSubject, selectedTopic, messages]);
 
-  const handleConnectionToggle = async () => {
+  const handleConnectionToggle = useCallback(async () => {
     if (isConnected) {
       handleDisconnect();
     } else {
@@ -389,7 +476,7 @@ const DemoPage: React.FC = () => {
         const assistantId = assistantIds[selectedSubject];
 
         // Start the VAPI call with the assistant ID
-        const result = await vapi.start(assistantId as any);
+        const result = await vapi.start({ assistantId });
 
         // Send the selected topic to the assistant
         vapi.send({
@@ -424,7 +511,7 @@ const DemoPage: React.FC = () => {
         }
       }
     }
-  };
+  }, [isConnected, handleDisconnect, selectedSubject, selectedTopic]);
 
   // Effect to handle changing the tutor
   useEffect(() => {
@@ -434,7 +521,7 @@ const DemoPage: React.FC = () => {
         handleConnectionToggle();
       }, 1000); // Wait a second before reconnecting
     }
-  }, [selectedSubject]);
+  }, [selectedSubject, isConnected, handleDisconnect, handleConnectionToggle]);
 
   const handleMicToggle = () => {
     if (!isConnected) return;
@@ -457,115 +544,6 @@ const DemoPage: React.FC = () => {
     if (file) {
       setHomeworkImage(file);
     }
-  };
-
-  const generateSessionNotes = () => {
-    const tutor = getTutorBySubject(selectedSubject);
-    const sessionDate = new Date().toLocaleDateString();
-    const sessionTime = new Date().toLocaleTimeString();
-    const sessionDuration = Math.floor(Math.random() * 30) + 10; // Mock session duration
-
-    let notes = `# ${tutor.name} - Comprehensive Session Report\n`;
-    notes += `**Date:** ${sessionDate}\n`;
-    notes += `**Time:** ${sessionTime}\n`;
-    notes += `**Duration:** ${sessionDuration} minutes\n`;
-    notes += `**Subject:** ${tutor.subject.charAt(0).toUpperCase() + tutor.subject.slice(1)}\n`;
-    notes += `**Topic:** ${selectedTopic || tutor.defaultTopic}\n`;
-    notes += `**Tutor:** ${tutor.name} (${tutor.subject} Specialist)\n\n`;
-
-    notes += `## 📊 Session Overview\n`;
-    notes += `This interactive tutoring session with ${tutor.name} focused on ${selectedTopic || tutor.defaultTopic}.\n`;
-    notes += `The session combined text-based learning activities, problem-solving exercises,\n`;
-    notes += `and personalized AI tutoring to enhance understanding of ${tutor.subject} concepts.\n\n`;
-
-    notes += `## 🎯 Learning Objectives\n`;
-    notes += `- Understand and apply concepts from ${selectedTopic || tutor.defaultTopic}\n`;
-    notes += `- Practice problem-solving techniques using AI-guided assistance\n`;
-    notes += `- Receive personalized feedback on learning approaches\n`;
-    notes += `- Build confidence through interactive learning experiences\n\n`;
-
-    if (messages.length > 0) {
-      notes += `## 💬 Discussion Summary\n`;
-      const userMessages = messages.filter(m => m.sender === 'user');
-      const aiMessages = messages.filter(m => m.sender === 'ai');
-
-      notes += `**Questions Asked:** ${userMessages.length}\n`;
-      notes += `**AI Responses:** ${aiMessages.length}\n\n`;
-
-      notes += `### Key Discussion Points:\n`;
-      messages.slice(-5).forEach((message, index) => {
-        if (message.sender === 'user') {
-          notes += `**Student Question (Q${index + 1}):** ${message.content}\n`;
-        } else {
-          notes += `**${tutor.name} Response:** ${message.content.slice(0, 100)}...\n`;
-        }
-      });
-      notes += `\n`;
-
-      notes += `### Communication Analysis:\n`;
-      notes += `- Short, concise questions show focused learning approach\n`;
-      notes += `- AI responses provided clear, structured explanations\n`;
-      notes += `- Interactive back-and-forth conversation maintained engagement\n`;
-      notes += `- Topic remained focused on ${selectedTopic || tutor.defaultTopic}\n\n`;
-    }
-
-    notes += `## 📚 Key Concepts Covered\n`;
-    notes += `- Theoretical foundation of ${selectedTopic || tutor.defaultTopic}\n`;
-    notes += `- Practical application and examples\n`;
-    notes += `- Common problem-solving approaches\n`;
-    notes += `- Verification and understanding checks\n\n`;
-
-    notes += `## 📈 Learning Progress\n`;
-    notes += `### Strengths Demonstrated:\n`;
-    notes += `- Consistent engagement with learning material\n`;
-    notes += `- Courage to ask questions when concepts are unclear\n`;
-    notes += `- Willingness to explore different solution approaches\n`;
-    notes += `- Good understanding of foundational concepts\n\n`;
-
-    notes += `### Areas for Development:\n`;
-    notes += `- ${tutor.subject === 'math' ? 'Mathematical: More practice with numerical calculations' : 'Conceptual: Deeper exploration of theoretical applications'}\n`;
-    notes += `- Problem-solving efficiency can be improved\n`;
-    notes += `- Practice with ${tutor.subject === 'math' ? 'algebraic manipulation' : 'conceptual connections'}\n\n`;
-
-    notes += `## 🎓 Recommended Next Steps\n`;
-    notes += `### Immediate Actions (This Week):\n`;
-    notes += `1. Review all concepts discussed in today's session\n`;
-    notes += `2. Complete 5-10 practice problems on ${selectedTopic || tutor.defaultTopic}\n`;
-    notes += `3. Identify 2-3 specific questions for the next session\n`;
-    notes += `4. Review practice problem solutions independently\n\n`;
-
-    notes += `### Medium-Term Goals (Next 2 Weeks):\n`;
-    notes += `1. Master all problem types covered in ${tutor.subject}\n`;
-    notes += `2. Develop personal problem-solving strategies\n`;
-    notes += `3. Build confidence in explaining solutions\n`;
-    notes += `4. Apply concepts to real-world scenarios\n\n`;
-
-    notes += `### Study Techniques Recommendations:\n`;
-    notes += `- Use spaced repetition for better retention\n`;
-    notes += `- Create visual mind maps of ${tutor.subject} connections\n`;
-    notes += `- Practice explaining concepts to others (rubber duck debugging)\n`;
-    notes += `- Maintain consistent daily learning schedule\n\n`;
-
-    notes += `## 📊 Session Metrics\n`;
-    notes += `- Total Messages: ${messages.length}\n`;
-    notes += `- Questions Answered: ${messages.filter(m => m.sender === 'ai').length}\n`;
-    notes += `- Learning Pace: ${sessionDuration > 20 ? 'Focused and thorough' : 'Effective and efficient'}\n`;
-    notes += `- Topic Coverage: 95% of planned objectives addressed\n\n`;
-
-    notes += `## ✍️ Personal Reflection\n`;
-    notes += `This session provided valuable learning opportunities and demonstrated\n`;
-    notes += `strong engagement with ${tutor.subject} material. The student shows curiosity\n`;
-    notes += `and willingness to explore difficult concepts. Continued practice with\n`;
-    notes += `the recommended exercises will build upon today's foundation.\n\n`;
-
-    notes += `---\n`;
-    notes += `*📝 Session Notes Generated by Tuitionly AI Learning Platform*\n`;
-    notes += `*🎯 Focused on: ${selectedTopic || tutor.defaultTopic}*\n`;
-    notes += `*👨‍🏫 Tutor: ${tutor.name}*\n`;
-    notes += `*⏱️  Generated: ${new Date().toLocaleString()}*\n`;
-    notes += `*AI-Powered Learning personalization activated*\n`;
-
-    setSessionNotes(notes);
   };
 
   const downloadNotes = () => {
@@ -1072,9 +1050,9 @@ const DemoPage: React.FC = () => {
                                   <span className="text-white text-sm font-semibold">{getTutorBySubject(selectedSubject).name.charAt(0)}</span>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className={`text-sm break-words ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                    <strong>{getTutorBySubject(selectedSubject).name}:</strong> Hello! I'm {getTutorBySubject(selectedSubject).name}, your AI {selectedSubject} tutor. Click "Join Class" above to start a voice conversation, or type your questions here about {selectedTopic || getTutorBySubject(selectedSubject).defaultTopic}!
-                                  </p>
+                        <p className={`text-sm break-words ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                          <strong>{getTutorBySubject(selectedSubject).name}:</strong> Hello! I'm {getTutorBySubject(selectedSubject).name}, your AI {selectedSubject} tutor. Click "Join Class" above to start a voice conversation, or type your questions here about {selectedTopic || getTutorBySubject(selectedSubject).defaultTopic}!
+                        </p>
                                   <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                                     Just now
                                   </span>

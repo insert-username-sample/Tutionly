@@ -7,7 +7,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTheme, useLogo } from '@/contexts/ThemeContext';
 import GlassCard from '@/components/ui/GlassCard';
-import Button from '@/components/ui/Button';
 
 const CareersPage: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();

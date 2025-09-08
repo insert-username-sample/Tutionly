@@ -13,9 +13,7 @@ import { signOut } from 'firebase/auth';
 import { User as UserIcon, Menu, X } from 'lucide-react';
 import ProfileDropDown from './ui/ProfileDropDown';
 
-interface NavigationProps {}
-
-const Navigation: React.FC<NavigationProps> = () => {
+const Navigation: React.FC = () => {
   const { logoSrc, logoAlt } = useLogo();
   const { isDark } = useTheme();
   const [user] = useAuthState(auth);

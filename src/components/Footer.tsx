@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { Twitter, Linkedin, Mail } from 'lucide-react';
 import { useLogo, useTheme } from '@/contexts/ThemeContext';
 
 interface FooterProps {

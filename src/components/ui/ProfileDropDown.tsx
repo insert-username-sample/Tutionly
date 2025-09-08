@@ -4,7 +4,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { User, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const ProfileDropDown: React.FC = () => {
