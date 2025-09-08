@@ -3,8 +3,12 @@
 import React from 'react';
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
+import HowItWorks from '@/components/HowItWorks';
+import Features from '@/components/Features';
 import Footer from '@/components/Footer';
 import { useTheme } from '@/contexts/ThemeContext';
+import BackgroundWrapper from '@/components/ui/BackgroundWrapper';
+import Divider from '@/components/ui/Divider';
 
 export default function HomePage() {
   const { isDark } = useTheme();
@@ -31,9 +35,12 @@ export default function HomePage() {
         onTryDemo={handleTryDemo}
         onJoinWaitlist={handleJoinWaitlist}
       />
+      <BackgroundWrapper>
+        <HowItWorks />
+        <Divider />
+        <Features />
+      </BackgroundWrapper>
       <Footer />
     </main>
   );
 }
-
-

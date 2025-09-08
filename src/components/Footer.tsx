@@ -20,13 +20,12 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
       { label: 'Features', href: '/features' },
       { label: 'Pricing', href: '/pricing' },
       { label: 'Demo', href: '/demo' },
-      { label: 'API', href: '/api' },
     ],
     company: [
       { label: 'About', href: '/about' },
       { label: 'Blog', href: '/blog' },
       { label: 'Careers', href: '/careers' },
-      { label: 'Contact', href: '/contact' },
+      { label: 'Contact', href: 'mailto:manaskecreations@gmail.com' },
     ],
     resources: [
       { label: 'Help Center', href: '/help' },
@@ -37,10 +36,9 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
   };
 
   const socialLinks = [
-    { icon: Github, href: 'https://github.com/tuitionly', label: 'GitHub' },
-    { icon: Twitter, href: 'https://twitter.com/tuitionly', label: 'Twitter' },
-    { icon: Linkedin, href: 'https://linkedin.com/company/tuitionly', label: 'LinkedIn' },
-    { icon: Mail, href: 'mailto:hello@tuitionly.com', label: 'Email' },
+    { icon: Twitter, href: 'https://x.com/Tutionly_India', label: 'Twitter' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/company/tutionly-education', label: 'LinkedIn' },
+    { icon: Mail, href: 'mailto:manaskecreations@gmail.com', label: 'Email' },
   ];
 
   return (

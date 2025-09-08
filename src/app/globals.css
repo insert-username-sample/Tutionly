@@ -24,6 +24,11 @@
   --dark-text-primary: #F9FAFB;
   --dark-text-secondary: #9CA3AF;
   --dark-border: #374151;
+
+  /* Brand Colors from Logo */
+  --brand-green: #6EE7B7;
+  --brand-yellow: #FBBF24;
+  --brand-blue: #60A5FA;
 }
 
 /* Typography */
@@ -47,6 +52,23 @@ body {
 body.dark {
   background-color: var(--dark-bg);
   color: var(--dark-text-primary);
+}
+
+/* Section Backgrounds */
+.section-bg-light-1 {
+  background: radial-gradient(ellipse at top, rgba(219, 234, 254, 0.4), transparent 60%);
+}
+
+.section-bg-light-2 {
+  background: radial-gradient(ellipse at bottom, rgba(254, 249, 195, 0.3), transparent 60%);
+}
+
+.section-bg-dark-1 {
+  background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.1), transparent 60%);
+}
+
+.section-bg-dark-2 {
+  background: radial-gradient(ellipse at bottom, rgba(16, 185, 129, 0.1), transparent 60%);
 }
 
 /* Ensure all elements transition smoothly */
@@ -81,11 +103,9 @@ body.dark {
 }
 
 .glass-light {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 32px var(--light-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: #FFFFFF;
+  border: 1px solid var(--light-border);
+  box-shadow: 0 8px 32px var(--light-shadow);
 }
 
 .glass-dark {

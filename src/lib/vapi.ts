@@ -1,14 +1,13 @@
 // VAPI Web SDK integration for Tuitionly
 import Vapi from '@vapi-ai/web';
 
-
 export interface VapiCallbacks {
   onSpeechStart?: () => void;
   onSpeechEnd?: () => void;
   onCallStart?: () => void;
   onCallEnd?: () => void;
   onVolumeLevel?: (volume: number) => void;
-  onMessage?: (message: unknown) => void;
+  onMessage?: (message: Record<string, unknown>) => void;
   onError?: (error: Error) => void;
 }
 
@@ -35,12 +34,12 @@ class VapiSDK {
     // Create a mock VAPI object for development/fallback
     this.vapi = {
       on: () => {},
-      start: () => Promise.resolve(),
+      start: () => Promise.resolve({} as any),
       stop: () => {},
       send: () => {},
       isMuted: () => false,
       setMuted: () => {}
-    } as unknown as Vapi;
+    } as any as Vapi;
     this.callbacks = {};
   }
 
@@ -71,7 +70,7 @@ class VapiSDK {
         this.callbacks.onVolumeLevel?.(volume);
       });
 
-      this.vapi.on('message', (message: unknown) => {
+      this.vapi.on('message', (message: Record<string, unknown>) => {
         this.callbacks.onMessage?.(message);
       });
 
@@ -88,17 +87,18 @@ class VapiSDK {
     this.callbacks = callbacks;
   }
 
-  async start(assistantId?: string) {
+  async start(assistantConfig?: Record<string, unknown>) {
     try {
       console.log('Starting VAPI connection...');
       
-      // Start call - if you have an existing assistant, use its ID
-      // Otherwise, this will create a default assistant
-      if (assistantId) {
-        console.log('Connecting to assistant:', assistantId);
-        await this.vapi.start(assistantId);
+      // Start with basic configuration - don't overwhelm with complex setup initially
+      if (typeof assistantConfig === 'string') {
+        console.log('Connecting to assistant:', assistantConfig);
+        // Try to connect to existing assistant by ID
+        await this.vapi.start(assistantConfig);
       } else {
-        console.log('Starting with default configuration');
+        console.log('Starting with default assistant');
+        // Use default assistant - this usually works better initially
         await this.vapi.start();
       }
       
@@ -121,11 +121,11 @@ class VapiSDK {
             type: 'conversation-update',
             conversation: [{
               role: 'assistant',
-              message: "Hello! I'm Math Tutorly. VAPI connection is in demo mode. Please check your API keys and assistant configuration for full functionality."
+              message: "Hey there! I'm Math Tutorly, and I'm excited to help you with quadratic equations today! I'm currently running in demo mode, but I can still guide you through some math concepts. What would you like to explore first?"
             }]
           });
-        }, 1000);
-      }, 2000);
+        }, 500);
+      }, 1000);
       
       return { success: true, demo: true }; // Return success for demo mode
     }
@@ -135,9 +135,8 @@ class VapiSDK {
     this.vapi.stop();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  send(message: any) {
-    this.vapi.send(message);
+  send(message: Record<string, unknown>) {
+    this.vapi.send(message as any);
   }
 
   isMuted() {
@@ -162,4 +161,4 @@ class VapiSDK {
 }
 
 // Create singleton instance with your public key
-export const vapi = new VapiSDK('a16f2123-7c4c-43a9-9711-6d9ccfc96281');
+export const vapi = new VapiSDK(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!);

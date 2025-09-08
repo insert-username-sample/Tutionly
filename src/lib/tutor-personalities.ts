@@ -23,7 +23,7 @@ export const TUTOR_PERSONALITIES: Record<string, TutorPersonality> = {
     name: "Science Tutorly", 
     subject: "Science",
     description: "Your curious science guide exploring the wonders of the natural world",
-    defaultTopic: "Chemical Reactions and the Periodic Table",
+    defaultTopic: "Physics: Forces and Motion",
     personality: "Curious, experimental, and passionate about discovery",
     teachingStyle: "Connects scientific concepts to everyday phenomena and encourages hands-on thinking",
     voice: "female"

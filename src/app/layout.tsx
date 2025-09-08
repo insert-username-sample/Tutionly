@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Poppins, Roboto_Mono } from "next/font/google";
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import "./globals.css";
@@ -27,7 +27,11 @@ export const metadata: Metadata = {
   description: "AI-powered personalized tutoring that adapts to your unique learning style, memory type, and pace. Get step-by-step solutions and interactive lessons.",
   keywords: "AI tutoring, personalized learning, online education, homework help, adaptive learning",
   authors: [{ name: "Tuitionly" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -37,6 +41,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/tutionly favcon.png" />
+      </head>
       <body
         className={`${inter.variable} ${poppins.variable} ${robotoMono.variable} antialiased`}
       >
