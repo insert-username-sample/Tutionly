@@ -5,12 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "postbuild": "next-on-pages",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@radix-ui/react-label": "^2.1.7",
     "@typeform/embed-react": "^4.6.0",
     "@vapi-ai/web": "^2.3.10",
