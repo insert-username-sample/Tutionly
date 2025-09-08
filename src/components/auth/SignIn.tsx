@@ -6,7 +6,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import Button from "../ui/Button";
 import Link from "next/link";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, Auth } from "firebase/auth";
 import { auth, googleProvider, appleProvider } from "@/lib/firebase";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -17,7 +17,7 @@ const SignIn: FC = () => {
 
   const handleSignIn = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth as Auth, email, password);
       // Handle successful sign-in
     } catch (error) {
       // Handle sign-in error
@@ -27,7 +27,7 @@ const SignIn: FC = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithPopup(auth as Auth, googleProvider);
       // Handle successful sign-in
     } catch (error) {
       // Handle sign-in error
@@ -37,7 +37,7 @@ const SignIn: FC = () => {
 
   const handleAppleSignIn = async () => {
     try {
-      await signInWithPopup(auth, appleProvider);
+      await signInWithPopup(auth as Auth, appleProvider);
       // Handle successful sign-in
     } catch (error) {
       // Handle sign-in error

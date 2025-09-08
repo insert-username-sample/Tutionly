@@ -161,4 +161,9 @@ class VapiSDK {
 }
 
 // Create singleton instance with your public key
-export const vapi = new VapiSDK(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!);
+let vapi: VapiSDK;
+if (typeof window !== 'undefined') {
+  vapi = new VapiSDK(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!);
+}
+
+export { vapi };
