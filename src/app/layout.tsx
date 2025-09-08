@@ -42,10 +42,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/tutionly favcon.png" />
+        <link rel="icon" href="/favicon.png" />
       </head>
       <body
         className={`${inter.variable} ${poppins.variable} ${robotoMono.variable} antialiased`}
+        suppressHydrationWarning={true}
       >
         <ThemeProvider>
           {children}

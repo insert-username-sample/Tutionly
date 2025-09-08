@@ -1,2 +1,5 @@
 name = "tuitionly-modern"
-compatibility_date = "2024-07-25"
+compatibility_date = "2024-01-01"
+
+[pages]
+build = "npm run pages:build"
