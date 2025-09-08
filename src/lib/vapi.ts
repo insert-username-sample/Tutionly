@@ -135,8 +135,8 @@ class VapiSDK {
     this.vapi.stop();
   }
 
-  send(message: any) {
-    this.vapi.send(message);
+  send(message: Record<string, unknown>) {
+    this.vapi.send(message as any);
   }
 
   isMuted() {
