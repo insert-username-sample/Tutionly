@@ -160,10 +160,22 @@ class VapiSDK {
   }
 }
 
-// Create singleton instance with your public key
-let vapi: VapiSDK;
-if (typeof window !== 'undefined') {
-  vapi = new VapiSDK(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!);
-}
+let vapiInstance: VapiSDK | null = null;
 
-export { vapi };
+export const getVapi = (): VapiSDK => {
+  if (typeof window === 'undefined') {
+    // Return a mock object for server-side rendering
+    return {
+      start: async () => ({ success: false, demo: true }),
+      stop: () => {},
+      send: () => {},
+      setCallbacks: () => {},
+    } as unknown as VapiSDK;
+  }
+
+  if (!vapiInstance) {
+    vapiInstance = new VapiSDK(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!);
+  }
+
+  return vapiInstance;
+};
