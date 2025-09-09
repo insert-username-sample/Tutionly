@@ -1,6 +1,12 @@
 name = "tuitionly-modern"
+main = ".vercel/output/functions/__next_launcher.func/index.js"
 compatibility_date = "2024-01-01"
 
-[pages]
-build = "npm run pages:build"
-pages_build_output_dir = ".vercel/output/static"
+[site]
+bucket = ".vercel/output/static"
+
+[build]
+command = "npm run build"
+
+[observability.logs]
+enabled = true
