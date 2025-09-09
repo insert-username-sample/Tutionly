@@ -8,10 +8,15 @@ import Image from 'next/image';
 import { useTheme, useLogo } from '@/contexts/ThemeContext';
 import GlassCard from '@/components/ui/GlassCard';
 import Button from '@/components/ui/Button';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { getAuth } from '@/lib/firebase';
+import { Auth } from 'firebase/auth';
 
 const ProfilePage: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
   const { logoSrc, logoAlt } = useLogo();
+  const auth = getAuth();
+  const [user] = useAuthState(auth as Auth);
 
   return (
     <main
@@ -71,8 +76,8 @@ const ProfilePage: React.FC = () => {
                 <User size={48} className="text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold">Manas Khobrekar</h1>
-                <p className="text-lg text-gray-400">manas.khobrekar@example.com</p>
+                <h1 className="text-3xl font-bold">{user?.displayName || 'Guest'}</h1>
+                <p className="text-lg text-gray-400">{user?.email || ''}</p>
               </div>
             </div>
           </GlassCard>
@@ -102,11 +107,11 @@ const ProfilePage: React.FC = () => {
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-gray-400">Full Name</label>
-                <p className="text-lg">Manas Khobrekar</p>
+                <p className="text-lg">{user?.displayName || 'Guest'}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-400">Email Address</label>
-                <p className="text-lg">manas.khobrekar@example.com</p>
+                <p className="text-lg">{user?.email || ''}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-400">Phone Number</label>
