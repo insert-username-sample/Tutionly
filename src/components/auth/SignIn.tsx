@@ -7,13 +7,14 @@ import { Input } from "../ui/input";
 import Button from "../ui/Button";
 import Link from "next/link";
 import { signInWithEmailAndPassword, signInWithPopup, Auth } from "firebase/auth";
-import { auth, googleProvider, appleProvider } from "@/lib/firebase";
+import { getAuth, googleProvider, appleProvider } from "@/lib/firebase";
 import { useTheme } from "@/contexts/ThemeContext";
 
 const SignIn: FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { isDark } = useTheme();
+  const auth = getAuth();
 
   const handleSignIn = async () => {
     try {

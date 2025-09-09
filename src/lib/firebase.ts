@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, OAuthProvider, Auth } from "firebase/auth";
-import { getFirestore, Firestore } from "firebase/firestore";
+import { getAuth as firebaseGetAuth, GoogleAuthProvider, OAuthProvider, Auth } from "firebase/auth";
+import { getFirestore as firebaseGetFirestore, Firestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,10 +18,29 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase safely for both server and client
-const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+let app: FirebaseApp;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
+}
 
-const auth: Auth = getAuth(app);
-const db: Firestore = getFirestore(app);
+let auth: Auth;
+let db: Firestore;
+
+function getDb() {
+  if (!db) {
+    db = firebaseGetFirestore(app);
+  }
+  return db;
+}
+
+function getAuth() {
+  if (!auth) {
+    auth = firebaseGetAuth(app);
+  }
+  return auth;
+}
 
 // Providers
 const googleProvider = new GoogleAuthProvider();
@@ -29,4 +48,4 @@ const appleProvider = new OAuthProvider('apple.com');
 appleProvider.addScope('email');
 appleProvider.addScope('name');
 
-export { app, auth, db, googleProvider, appleProvider };
+export { app, getAuth, getDb, googleProvider, appleProvider };
