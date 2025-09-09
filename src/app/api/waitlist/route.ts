@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, Firestore } from 'firebase/firestore';
 
 export const runtime = 'edge';
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    await addDoc(collection(db, 'waitlist'), data);
+    await addDoc(collection(db as Firestore, 'waitlist'), data);
     return NextResponse.json({ message: 'Successfully joined the waitlist!' });
   } catch (error) {
     console.error('Error in waitlist API:', error);

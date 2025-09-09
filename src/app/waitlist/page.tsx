@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/lib/firebase';
+import { Auth } from 'firebase/auth';
 import { ArrowLeft, Check, ChevronRight, Moon, Sun, Users, BookOpen, MessageSquare, Star, Heart, Crown } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -132,7 +133,7 @@ const WaitlistPage: React.FC = () => {
   const [answers, setAnswers] = useState<Partial<WaitlistFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [user] = useAuthState(auth);
+  const [user] = useAuthState(auth as Auth);
 
   useEffect(() => {
     if (user) {
