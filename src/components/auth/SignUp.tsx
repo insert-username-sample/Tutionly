@@ -7,7 +7,7 @@ import { Input } from "../ui/input";
 import Button from "../ui/Button";
 import Link from "next/link";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider, appleProvider } from "@/lib/firebase";
+import { getAuth, googleProvider, appleProvider } from "@/lib/firebase";
 import { useTheme } from "@/contexts/ThemeContext";
 
 const SignUp: FC = () => {
@@ -15,6 +15,7 @@ const SignUp: FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { isDark } = useTheme();
+  const auth = getAuth();
 
   const handleSignUp = async () => {
     if (password !== confirmPassword) {

@@ -122,7 +122,7 @@ const AboutPage: React.FC = () => {
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="md:w-1/3 text-center">
                 <Image
-                  src="/manas.jpeg"
+                  src="/founder.jpeg"
                   alt="Manas Khobrekar"
                   width={200}
                   height={200}

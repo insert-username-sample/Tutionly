@@ -19,17 +19,13 @@ const ProfileDropDown: React.FC = () => {
       } border`}
     >
       <div className="p-4">
-        <Link href="/profile" legacyBehavior>
-          <a className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-700">
-            <User size={16} />
-            Profile
-          </a>
+        <Link href="/profile" className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-700">
+          <User size={16} />
+          Profile
         </Link>
-        <Link href="/settings" legacyBehavior>
-          <a className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-700">
-            <Settings size={16} />
-            Settings
-          </a>
+        <Link href="/settings" className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-700">
+          <Settings size={16} />
+          Settings
         </Link>
         <div className="h-px my-2 bg-gray-700" />
         <button className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-700 w-full text-left">

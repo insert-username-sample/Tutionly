@@ -122,7 +122,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               <p className="text-lg lg:text-xl leading-relaxed max-w-xl mb-8 font-body" style={{
                 color: isDark ? 'var(--dark-text-secondary)' : 'var(--light-text-secondary)'
               }}>
-                Tuitionly adapts to your unique learning style — memory type, pace, and preferences — 
+                Tuitionly adapts to your unique learning style - memory type, pace, and preferences - 
                 so you can study smarter, not harder.
               </p>
               

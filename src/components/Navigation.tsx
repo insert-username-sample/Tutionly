@@ -8,7 +8,7 @@ import { useLogo, useTheme } from '@/contexts/ThemeContext';
 import ThemeToggle from './ThemeToggle';
 import Button from './ui/Button';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/firebase';
+import { getAuth } from '@/lib/firebase';
 import { signOut, Auth } from 'firebase/auth';
 import { User as UserIcon, Menu, X } from 'lucide-react';
 import ProfileDropDown from './ui/ProfileDropDown';
@@ -16,6 +16,7 @@ import ProfileDropDown from './ui/ProfileDropDown';
 const Navigation: React.FC = () => {
   const { logoSrc, logoAlt } = useLogo();
   const { isDark } = useTheme();
+  const auth = getAuth();
   const [user] = useAuthState(auth as Auth);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
