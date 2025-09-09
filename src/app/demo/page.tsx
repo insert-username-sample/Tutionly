@@ -14,8 +14,6 @@ import { getVapi } from '@/lib/vapi';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from '@/lib/firebase';
 import { Auth } from 'firebase/auth';
-import SignIn from '@/components/auth/SignIn';
-import SignUp from '@/components/auth/SignUp';
 
 const generateSessionNotes = (
   selectedSubject: string,
@@ -134,10 +132,9 @@ const DemoPage: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
   const { logoSrc, logoAlt } = useLogo();
   const auth = getAuth();
-  const [user, loading] = useAuthState(auth as Auth);
+  useAuthState(auth as Auth);
   const vapi = getVapi();
   const [isDemoStarted, setIsDemoStarted] = useState(false);
-  const [showAuth, setShowAuth] = useState<'signin' | 'signup'>('signin');
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isMicOn, setIsMicOn] = useState(false);
@@ -185,7 +182,7 @@ const DemoPage: React.FC = () => {
     } else if (!isConnected) {
       hasSentInitialTopic.current = false; // Reset when disconnecting
     }
-  }, [isConnected, selectedTopic]);
+  }, [isConnected, selectedTopic, vapi]);
   
   // Whiteboard state
   const [isDrawing, setIsDrawing] = useState(false);
@@ -447,7 +444,7 @@ const DemoPage: React.FC = () => {
     return () => {
       vapi.stop();
     };
-  }, []);
+  }, [vapi]);
 
   const handleDisconnect = useCallback(() => {
     vapi.stop();
@@ -458,7 +455,7 @@ const DemoPage: React.FC = () => {
     const notes = generateSessionNotes(selectedSubject, selectedTopic, messages);
     setSessionNotes(notes);
     setShowNotes(true);
-  }, [selectedSubject, selectedTopic, messages]);
+  }, [selectedSubject, selectedTopic, messages, vapi]);
 
   const handleConnectionToggle = useCallback(async () => {
     if (isConnected) {
@@ -514,7 +511,7 @@ const DemoPage: React.FC = () => {
         }
       }
     }
-  }, [isConnected, handleDisconnect, selectedSubject, selectedTopic]);
+  }, [isConnected, handleDisconnect, selectedSubject, selectedTopic, vapi]);
 
   // Effect to handle changing the tutor
   useEffect(() => {

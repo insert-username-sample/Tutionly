@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-const data = Array.from({ length: 100 }, (_, i) => ({
+const data = Array.from({ length: 100 }, () => ({
   value: Math.floor(Math.random() * 100),
 }));
 
