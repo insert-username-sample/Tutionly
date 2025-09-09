@@ -13,7 +13,6 @@ import { TUTOR_PERSONALITIES, getTutorBySubject, getTopicsForSubject } from '@/l
 import { getVapi } from '@/lib/vapi';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/lib/firebase';
-import { Auth } from 'firebase/auth';
 import SignIn from '@/components/auth/SignIn';
 import SignUp from '@/components/auth/SignUp';
 
@@ -133,7 +132,7 @@ const generateSessionNotes = (
 const DemoPage: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
   const { logoSrc, logoAlt } = useLogo();
-  const [user, loading] = useAuthState(auth as Auth);
+  const [user, loading] = useAuthState(auth);
   const vapi = getVapi();
   const [isDemoStarted, setIsDemoStarted] = useState(false);
   const [showAuth, setShowAuth] = useState<'signin' | 'signup'>('signin');
