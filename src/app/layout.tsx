@@ -1,26 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Poppins, Roboto_Mono } from "next/font/google";
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: 'swap',
-});
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ['300', '400', '500', '600', '700'],
-  display: 'swap',
-});
-
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: "Tuitionly - Because Every Student Learns Differently",
@@ -44,10 +24,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.png" />
       </head>
-      <body
-        className={`${inter.variable} ${poppins.variable} ${robotoMono.variable} antialiased`}
-        suppressHydrationWarning={true}
-      >
+      <body suppressHydrationWarning={true}>
         <ThemeProvider>
           {children}
         </ThemeProvider>
