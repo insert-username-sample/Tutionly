@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npx @cloudflare/next-on-pages@1",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "deploy": "npx wrangler deploy"
+    "deploy": "npm run build && npx wrangler deploy"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
