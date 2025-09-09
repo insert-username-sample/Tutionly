@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "pages:build": "npx @cloudflare/next-on-pages@1",
-    "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
+    "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static",
+    "deploy": "npm run build && npx wrangler deploy"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
